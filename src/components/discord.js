@@ -39,7 +39,7 @@ const initDiscord = async (config, mongodb, stats) => {
     if (!command) return;
   
     try {
-      await command.execute(interaction, mongodb, stats);
+      await command.execute({ interaction, config, client, mongodb, stats });
     } catch (error) {
       console.error(error);
       await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });

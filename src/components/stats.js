@@ -24,7 +24,7 @@ const initStats = async (config, mongodb, tracker) => {
     const refreshStats = async () => {
       const trackerStats = await tracker.getProfileStats(originId)
       const savedStats = await mongodb.saveStats(originId, trackerStats)
-      return savedStats.value
+      return trackerStats
     }
     
     if (userStats) {
@@ -60,7 +60,7 @@ const initStats = async (config, mongodb, tracker) => {
     }
 
     const userStats = await getUser(userId);
-    // console.log(userStats)
+    console.log(userStats)
     const statsOverview = userStats.segments.find(s => s.type === 'overview')
     console.log(statsOverview)
     const mappedStats = Object.entries(statsOverview.stats).map(statsMapper)

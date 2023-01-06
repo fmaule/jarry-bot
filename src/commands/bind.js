@@ -8,7 +8,7 @@ module.exports = {
       option.setName('username')
         .setDescription('Apex tracker username (your origin name basically)')
         .setRequired(true)),
-	async execute(interaction, mongodb, stats) {
+	async execute({ interaction, mongodb, stats }) {
     const originId = interaction.options.getString('username');
     console.log(`interaction from user ${interaction.user.id} to origin id ${originId}`)
     
