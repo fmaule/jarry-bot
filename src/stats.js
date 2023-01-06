@@ -1,19 +1,22 @@
-const { tracker: { token }} = require('../config.json');
-const axios = require('axios');
+const asd = require('../payloads/stats.json')
 
-console.log('token', token)
+const overview = asd.segments.find(s => s.type === 'overview')
 
-const statsClient = axios.create({
-  headers: {
-    get: {
-      'TRN-Api-Key': token
-    }
+console.log(overview)
+
+const statsMapper = ([stat, values]) => {
+  const displayStat = []
+  displayStat.push(`${values.displayName}: ${values.value}`)
+  
+  if (values.rank) {
+    displayStat.push(`rank #${values.rank}`)
   }
-})
+  if (values.percentile) {
+    displayStat.push(`(top ${(100 - values.percentile).toFixed(2)}%)`)
+  }
 
-const asd = async () => {
-  const { data } = await statsClient.get('https://public-api.tracker.gg/v2/apex/standard/profile/origin/constfusion')
-  console.log(JSON.stringify(data))
+  return displayStat.join(' ')
 }
 
-asd().catch(console.log)
+const mappedStats = Object.entries(overview.stats).map(statsMapper)
+console.log(mappedStats)

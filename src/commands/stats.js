@@ -9,13 +9,11 @@ module.exports = {
     
     // get stats for user
     try {
-      const userStats = await stats.getUser(interaction.user.id)
+      const userStats = await stats.getPrintableStats(interaction.user.id)
       console.log('stats for user', userStats)
+      await interaction.reply(userStats.join('\n'))
     } catch (e) {
       console.log(e)
     }
-
-
-		await interaction.reply(`Stats printed to console, yolo`)
 	},
 };

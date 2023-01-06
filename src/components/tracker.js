@@ -21,24 +21,30 @@ const initTracker = async (config) => {
   });
 
   const getProfileStats = async (platformUserIdentifier) => {
-    const { data } = await statsClient.get(
+    const { data: body } = await statsClient.get(
       `${endpointUrl}/${platformUserIdentifier}`
     );
-    return data;
+    if (body.errors) throw new Error(body.errors)
+
+    return body.data;
   };
 
   const getSegmentStats = async (platformUserIdentifier, segmentType) => {
-    const { data } = await statsClient.get(
+    const { data: body } = await statsClient.get(
       `${endpointUrl}/${platformUserIdentifier}/segments/${segmentType}`
     );
-    return data;
+    if (body.errors) throw new Error(body.errors)
+
+    return body.data;
   };
 
   const getHistory = async (platformUserIdentifier) => {
-    const { data } = await statsClient.get(
+    const { data: body } = await statsClient.get(
       `${endpointUrl}/${platformUserIdentifier}/sessions`
     );
-    return data;
+    if (body.errors) throw new Error(body.errors)
+
+    return body.data;
   };
 
   return {

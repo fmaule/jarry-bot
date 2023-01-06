@@ -6,7 +6,8 @@ const { initLogger } = require('./logger');
 const componentName = path.parse(__filename).name;
 const { log, logError } = initLogger(componentName);
 
-let mongoCollection;
+let usersCollection;
+let statsCollection;
 
 const initMongodb = async ({ mongodb }) => {
   log('∝ initializing component');
@@ -14,13 +15,14 @@ const initMongodb = async ({ mongodb }) => {
     const client = new MongoClient(mongodb.uri);
     await client.connect();
     const db = await client.db(mongodb.dbName);
-    mongoCollection = db.collection(mongodb.collectionName);
+    usersCollection = db.collection(mongodb.usersCollection);
+    statsCollection = db.collection(mongodb.statsCollection);
   } catch (e) {
     logError(e);
   }
 
   const getPlatformUserIdentifierById = async (id) =>
-    mongoCollection.findOne({ discordId: id });
+    usersCollection.findOne({ discordId: id });
 
   const bindDiscordUser = async ({ id, username, discriminator }, originId) => {
     const doc = {
@@ -30,18 +32,38 @@ const initMongodb = async ({ mongodb }) => {
       originId,
     };
 
-    return mongoCollection.updateOne(
+    return usersCollection.findOneAndUpdate(
       { discordId: id },
       { $set: doc },
       { upsert: true }
     );
   };
 
+  const saveStats = async (originId, stats) => {
+    const doc = {
+      originId,
+      cachedOn: new Date(),
+      ...stats,
+    };
+
+    return statsCollection.findOneAndUpdate(
+      { originId },
+      { $set: doc },
+      { upsert: true }
+    );
+  };
+
+  const getStatsByOriginId = async (originId) =>
+    statsCollection.findOne({ originId });
+
   return {
-    collection: mongoCollection,
+    statsCollection,
+    usersCollection,
     getPlatformUserIdentifierById,
     bindDiscordUser,
-  }
+    getStatsByOriginId,
+    saveStats,
+  };
 };
 
 module.exports = {
