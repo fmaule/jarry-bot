@@ -1,0 +1,15 @@
+version: '3.9'
+services:
+  jarry-bot:
+    image: fermaul/jarry-bot:latest
+    secrets:
+      - BOT_DISCORD_TOKEN
+      - BOT_TRACKER_TOKEN
+      - BOT_MONGO_URI
+secrets:
+  BOT_DISCORD_TOKEN:
+    external: true
+  BOT_TRACKER_TOKEN:
+    external: true
+  BOT_MONGO_URI:
+    external: true

@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+    "dev": "SECRET_DIR=./secrets/ nodemon src/index.js",
+    "start": "SECRET_DIR=/run/secrets/ node src/index.js"
   },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.31",
