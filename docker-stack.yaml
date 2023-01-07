@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   jarry-bot:
-    image: fermaul/jarry-bot:latest
+    image: docker.io/fermaul/jarry-bot:latest
     secrets:
       - BOT_DISCORD_TOKEN
       - BOT_TRACKER_TOKEN

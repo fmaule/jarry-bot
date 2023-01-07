@@ -19,4 +19,4 @@ jobs:
           deploy_path: /home/deploy/jarry-bot
           stack_file_name: docker-stack.yaml
           keep_files: 5
-          args: jarry-bot
+          args: main
