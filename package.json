@@ -1,11 +1,13 @@
 {
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
   },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.31",
     "axios": "^1.2.2",
     "discord.js": "^14.7.1",
+    "docker-secret": "^2.0.5",
     "mongodb": "^4.13.0",
     "nodemon": "^2.0.20",
     "undici": "^5.14.0"
