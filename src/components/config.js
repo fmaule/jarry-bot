@@ -26,6 +26,7 @@ const initConfig = async () => {
       statsCollection: 'stats',
     },
   };
+  console.log(config)
 
   return config;
 };

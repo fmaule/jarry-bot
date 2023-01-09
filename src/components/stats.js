@@ -44,7 +44,7 @@ const initStats = async (config, mongodb, tracker) => {
     return await refreshStats()
   };
 
-  const getPrintableStats = async (userId) => {
+  const getUserPrintable = async (userId) => {
     const statsMapper = ([stat, values]) => {
       const displayStat = []
       displayStat.push(`${values.displayName}: ${values.value}`)
@@ -70,7 +70,7 @@ const initStats = async (config, mongodb, tracker) => {
 
   return {
     getUser,
-    getPrintableStats,
+    getUserPrintable,
   };
 };
 

@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path')
 const { initLogger } = require('./logger'); 
 const componentName = path.parse(__filename).name
-const { log } = initLogger(componentName);
+const { log, logError } = initLogger(componentName);
 
 const initDiscord = async (config, mongodb, stats) => {
   log('∝ initializing omponent')
@@ -40,8 +40,9 @@ const initDiscord = async (config, mongodb, stats) => {
   
     try {
       await command.execute({ interaction, config, client, mongodb, stats });
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      logError(e);
+      client.channels.cache.get('1061439947057414144').send(JSON.stringify(e))
       await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
     }
   });

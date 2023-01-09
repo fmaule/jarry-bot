@@ -9,7 +9,7 @@ module.exports = {
 
     // get stats for user
     try {
-      const userStats = await stats.getPrintableStats(interaction.user.id);
+      const userStats = await stats.getUserPrintable(interaction.user.id);
       console.log('stats for user', userStats);
       await interaction.reply(userStats.join('\n'));
     } catch (e) {
