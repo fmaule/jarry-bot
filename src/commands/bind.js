@@ -10,7 +10,7 @@ module.exports = {
         .setDescription('Apex tracker username (your origin name basically)')
         .setRequired(true)
     ),
-  async execute({ interaction, stats, client, config }) {
+  async execute({ interaction, stats, config, discordClient }) {
     await interaction.deferReply({ ephemeral: true });
     const originId = interaction.options.getString('username');
 
@@ -23,10 +23,8 @@ module.exports = {
     const nickname = `${level} | ${originId}`;
 
     // TODO maybe use methods on interaction instead? idk
-    await client.guilds.cache
-      .get(config.discord.guildId)
-      .members.cache.get(interaction.user.id)
-      .setNickname(nickname);
+    const { members } = discordClient;
+    await members.cache.get(interaction.user.id).setNickname(nickname);
 
     await interaction.editReply(
       `Your account is now connected to the [apex tracker](https://apex.tracker.gg/apex/profile/origin/${originId}/overview)`

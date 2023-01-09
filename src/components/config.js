@@ -17,6 +17,9 @@ const initConfig = async () => {
       guildId: '762775384746885150',
       channels: {
         debuglog: '1061439947057414144'
+      },
+      roles: {
+        botadmin: '1062094772157821059'
       }
     },
     tracker: {

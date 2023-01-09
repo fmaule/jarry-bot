@@ -20,7 +20,7 @@ const initDiscord = async (config, mongodb, stats) => {
     ],
   });
 
-  client.login(config.discord.token);
+  await client.login(config.discord.token);
 
   client.commands = new Collection();
   const commandsPath = path.join(__dirname, '../commands');
@@ -32,6 +32,15 @@ const initDiscord = async (config, mongodb, stats) => {
     client.commands.set(command.data.name, command);
   }
 
+  const guild = await client.guilds.cache.get(config.discord.guildId);
+  const { members } = guild
+  
+  const discordClient = {
+    client,
+    guild,
+    members
+  }
+
   client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
   
@@ -41,17 +50,20 @@ const initDiscord = async (config, mongodb, stats) => {
   
     try {
       log(`[${interaction.guildId}] ${interaction.user.username}#${interaction.user.discriminator} called ${interaction.commandName} in ${interaction.channelId}`)
-      await command.execute({ interaction, config, client, mongodb, stats });
+      await command.execute({ interaction, config, mongodb, stats, discordClient });
     } catch (e) {
       // might want to move logging after the if
       logError(e)
       const { channels } = config.discord;
       client.channels.cache.get(channels.debuglog).send(JSON.stringify({msg: e.message, options: e.options }))
       if (e instanceof InteractionError) {
-        logError('InteractionError')
         return await interaction.editReply({ content: `Error: ${e.message}`, ephemeral: true });
       }
-      await interaction.editReply({ content: `Error executing command: ${e.message}`, ephemeral: true });
+      try {
+        await interaction.editReply({ content: `Error executing command: ${e.message}`, ephemeral: true });
+      } catch (sendError) {
+        console.error('Unable to edit reply with error', sendError)
+      }
     }
   });
 
@@ -64,9 +76,7 @@ const initDiscord = async (config, mongodb, stats) => {
     });
   });
 
-  const guild = client.guilds.cache.get(config.discord.guildId);
-
-  return { client, guild };
+  return { client, guild, members };
 };
 
 module.exports = {

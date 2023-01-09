@@ -104,6 +104,6 @@ dist
 .tern-port
 
 # project stuff
-config.json
+manifest.json
 keys/*
 secrets/
