@@ -2,6 +2,9 @@ name: ci
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - 'main'
 
 jobs:
   docker-build:
@@ -12,16 +15,14 @@ jobs:
         uses: fmaule/generate-manifest@v1.0
         with:
           append-dockerfile: 'on'
-      -
-        name: Login to Docker Hub
+      - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push
+      - name: Build and push
         uses: docker/build-push-action@v3
-        with:\
+        with:
           context: .
           push: true
           tags: fermaul/jarry-bot:latest\
