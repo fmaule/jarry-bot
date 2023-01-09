@@ -42,7 +42,8 @@ const initDiscord = async (config, mongodb, stats) => {
       await command.execute({ interaction, config, client, mongodb, stats });
     } catch (e) {
       logError(e);
-      client.channels.cache.get('1061439947057414144').send(JSON.stringify(e))
+      const { channels } = config.discord;
+      client.channels.cache.get(channels.debuglog).send(JSON.stringify(e))
       await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
     }
   });

@@ -15,6 +15,9 @@ const initConfig = async () => {
       token: secrets.BOT_DISCORD_TOKEN,
       clientId: '1060895467933806642',
       guildId: '762775384746885150',
+      channels: {
+        debuglog: '1061439947057414144'
+      }
     },
     tracker: {
       token: secrets.BOT_TRACKER_TOKEN,
@@ -26,7 +29,6 @@ const initConfig = async () => {
       statsCollection: 'stats',
     },
   };
-  console.log(config)
 
   return config;
 };
