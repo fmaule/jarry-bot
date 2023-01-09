@@ -21,6 +21,7 @@ jobs:
       -
         name: Build and push
         uses: docker/build-push-action@v3
-        with:
+        with:\
+          context: .
           push: true
-          tags: fermaul/jarry-bot:latest
+          tags: fermaul/jarry-bot:latest\
