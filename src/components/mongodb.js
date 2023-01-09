@@ -21,22 +21,21 @@ const initMongodb = async ({ mongodb }) => {
     logError(e);
   }
 
-  const getPlatformUserIdentifierById = async (id) =>
-    usersCollection.findOne({ discordId: id });
+  const getOriginIdByDiscordId = async (discordId) =>
+    usersCollection.findOne({ discordId });
+
+  const getDiscordIdByOriginId = async (originId) =>
+    usersCollection.findOne({ originId });
 
   const bindDiscordUser = async ({ id, username, discriminator }, originId) => {
     const doc = {
-      id,
+      discordId: id,
       username,
       discriminator,
       originId,
     };
 
-    return usersCollection.findOneAndUpdate(
-      { discordId: id },
-      { $set: doc },
-      { upsert: true }
-    );
+    return usersCollection.insertOne(doc)
   };
 
   const saveStats = async (originId, stats) => {
@@ -59,7 +58,8 @@ const initMongodb = async ({ mongodb }) => {
   return {
     statsCollection,
     usersCollection,
-    getPlatformUserIdentifierById,
+    getOriginIdByDiscordId,
+    getDiscordIdByOriginId,
     bindDiscordUser,
     getStatsByOriginId,
     saveStats,

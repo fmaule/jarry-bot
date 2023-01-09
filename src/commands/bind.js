@@ -10,13 +10,11 @@ module.exports = {
         .setDescription('Apex tracker username (your origin name basically)')
         .setRequired(true)
     ),
-  async execute({ interaction, mongodb, stats, client, config }) {
+  async execute({ interaction, stats, client, config }) {
+    await interaction.deferReply({ ephemeral: true });
     const originId = interaction.options.getString('username');
-    console.log(
-      `interaction from user ${interaction.user.id} to origin id ${originId}`
-    );
 
-    await mongodb.bindDiscordUser(interaction.user.id, originId);
+    await stats.bind(interaction.user, originId);
 
     const userStats = await stats.getUser(interaction.user.id);
     const statsOverview = userStats.segments.find((s) => s.type === 'overview');
@@ -30,7 +28,7 @@ module.exports = {
       .members.cache.get(interaction.user.id)
       .setNickname(nickname);
 
-    await interaction.reply(
+    await interaction.editReply(
       `Your account is now connected to the [apex tracker](https://apex.tracker.gg/apex/profile/origin/${originId}/overview)`
     );
   },

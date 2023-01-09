@@ -1,4 +1,5 @@
 const { Client, Events, GatewayIntentBits, Collection } = require('discord.js');
+const { InteractionError } = require('../errors/interaction-errors')
 const fs = require('node:fs');
 
 // LOGGER
@@ -8,7 +9,7 @@ const componentName = path.parse(__filename).name
 const { log, logError } = initLogger(componentName);
 
 const initDiscord = async (config, mongodb, stats) => {
-  log('∝ initializing omponent')
+  log('∝ initializing component')
 
   const client = new Client({
     intents: [
@@ -39,12 +40,18 @@ const initDiscord = async (config, mongodb, stats) => {
     if (!command) return;
   
     try {
+      log(`[${interaction.guildId}] ${interaction.user.username}#${interaction.user.discriminator} called ${interaction.commandName} in ${interaction.channelId}`)
       await command.execute({ interaction, config, client, mongodb, stats });
     } catch (e) {
-      logError(e);
+      // might want to move logging after the if
+      logError(e)
       const { channels } = config.discord;
-      client.channels.cache.get(channels.debuglog).send(JSON.stringify(e))
-      await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+      client.channels.cache.get(channels.debuglog).send(JSON.stringify({msg: e.message, options: e.options }))
+      if (e instanceof InteractionError) {
+        logError('InteractionError')
+        return await interaction.editReply({ content: `Error: ${e.message}`, ephemeral: true });
+      }
+      await interaction.editReply({ content: `Error executing command: ${e.message}`, ephemeral: true });
     }
   });
 
